@@ -52,7 +52,7 @@ When you stop your project, or down down docker compose stack, you need to disco
 docker network:
 
 ```sh
-docker network disconnect <your-project-docker-network> epic-nginx-proxy || true
+docker network disconnect <your-project-docker-network> enrise-dev-proxy || true
 ```
 
 ## 4. Add the hostname to your hosts file

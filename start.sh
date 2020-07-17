@@ -4,6 +4,7 @@ docker network create enrise-dev-proxy > /dev/null 2>&1 || true
     -d \
     --rm \
     -p 80:80 \
+    -p 443:443 \
     -p 8080:8080 \
     -v /var/run/docker.sock:/var/run/docker.sock:ro \
     --name enrise-dev-proxy \
@@ -12,5 +13,6 @@ docker network create enrise-dev-proxy > /dev/null 2>&1 || true
     --api.insecure=true \
     --providers.docker=true \
     --providers.docker.exposedbydefault=false \
-    --entrypoints.web.address=:80 > /dev/null \
+    --entrypoints.web.address=:80 \
+    --entrypoints.web-secure.address=:443 > /dev/null \
     || true) && echo "Development hosts proxy is running."

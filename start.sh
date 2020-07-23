@@ -18,4 +18,4 @@ docker network create enrise-dev-proxy > /dev/null 2>&1 || true
     --providers.docker=true \
     --providers.docker.exposedbydefault=false \
     --entrypoints.web.address=:80 \
-    --entrypoints.traefik.address=:10080 > /dev/null) && echo -e "[\e[92mOK\e[39m]"
+    --entrypoints.traefik.address=:10080 > /dev/null) && echo -e "started"

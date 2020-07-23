@@ -9,6 +9,7 @@ docker network create enrise-dev-proxy > /dev/null 2>&1 || true
     -d \
     --rm \
     -p 80:80 \
+    -p 443:443 \
     -p 10080:10080 \
     -v /var/run/docker.sock:/var/run/docker.sock:ro \
     --name enrise-dev-proxy \
@@ -18,4 +19,5 @@ docker network create enrise-dev-proxy > /dev/null 2>&1 || true
     --providers.docker=true \
     --providers.docker.exposedbydefault=false \
     --entrypoints.web.address=:80 \
-    --entrypoints.traefik.address=:10080 > /dev/null) && echo -e "started"
+    --entrypoints.web-secure.address=:443 \
+    --entrypoints.traefik.address=:10080 > /dev/null && echo "started")

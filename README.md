@@ -31,31 +31,25 @@ wget --quiet --output-document - https://gitlab.enrise.com/Enrise/DevProxy/-/raw
 
 ## 2. Docker compose config
 
-For every service in your project, add the following to docker-compose:
+Add a labels to your docker-compose services so Traefik knows how to connect to them:
 
 ```yaml
-labels:
-  - "traefik.enable=true"
-  - "traefik.http.routers.<slug>.rule=Host(`<slug>.local`)"
-  - "traefik.http.services.<slug>.loadbalancer.server.port=80"
+services:
+  frontend:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.my-project-frontend.rule=Host(`frontend.my-project.local`)"
+      - "traefik.http.services.my-project-frontend.loadbalancer.server.port=80"
+  backend:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.my-project-frontend.rule=Host(`frontend.my-project.local`)"
+      - "traefik.http.services.my-project-frontend.loadbalancer.server.port=80"
 ```
 
-Make sure the slugs begin with your project name so multiple projects can run together, for example:
-
-```yaml
-labels:
-  - "traefik.enable=true"
-  - "traefik.http.routers.my-project-api.rule=Host(`api.my-project.local`)"
-  - "traefik.http.services.my-project-api.loadbalancer.server.port=80"
-
-```
+Note: make sure the slugs begin with your project name so multiple projects can run together.
 
 ## 3. Linking your docker network
-
-```sh
-docker network connect <your-project-docker-network> enrise-dev-proxy || true
-```
-
 
 ### On project start
 
@@ -77,7 +71,7 @@ docker network disconnect <your-project-docker-network> enrise-dev-proxy || true
 
 ## 4. Add the hostname to your hosts file
 
-Finally you have to make sure the host name is in your local hosts file. So for http://example.local
+Finally, you have to make sure the host name is in your local hosts file. So for http://example.local
 we would expect the following content in `/etc/hosts`:
 
 ```
@@ -99,3 +93,5 @@ You could automate this with a script like the following:
     alpine:latest \
     sh -c 'cat /dev/hostnames.txt >> /etc/hosts')
 ```
+This script checks if my-project.local already exists in the hosts file, and if not, it adds the contents
+of a file named dev/hostnames.txt (Add this file to your project).

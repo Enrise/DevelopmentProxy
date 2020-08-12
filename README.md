@@ -43,7 +43,7 @@ services:
   backend:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.my-project-frontend.rule=Host(`frontend.my-project.local`)"
+      - "traefik.http.routers.my-project-frontend.rule=Host(`api.my-project.local`)"
       - "traefik.http.services.my-project-frontend.loadbalancer.server.port=80"
 ```
 

@@ -1,3 +1,5 @@
+#!/usr/bin/env sh
+
 if ($(docker ps | grep -q enrise-dev-proxy)); then
   echo "Development hosts proxy is already running."
   exit 0

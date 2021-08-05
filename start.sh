@@ -1,3 +1,5 @@
+#!/usr/bin/env sh
+
 if ($(docker ps | grep -q enrise-dev-proxy)); then
   echo "Development hosts proxy is already running."
   exit 0
@@ -10,7 +12,7 @@ docker network create enrise-dev-proxy > /dev/null 2>&1 || true
     --rm \
     -p 80:80 \
     -p 443:443 \
-    -p 10080:10080 \
+    -p 10081:10081 \
     -v /var/run/docker.sock:/var/run/docker.sock:ro \
     --name enrise-dev-proxy \
     --network enrise-dev-proxy \
@@ -20,4 +22,4 @@ docker network create enrise-dev-proxy > /dev/null 2>&1 || true
     --providers.docker.exposedbydefault=false \
     --entrypoints.web.address=:80 \
     --entrypoints.web-secure.address=:443 \
-    --entrypoints.traefik.address=:10080 > /dev/null && echo "started")
+    --entrypoints.traefik.address=:10081 > /dev/null && echo "started")

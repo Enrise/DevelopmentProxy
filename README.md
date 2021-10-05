@@ -5,12 +5,13 @@ So localhost:3000 can just be http://my-project.local again.
 
 ## How does it work?
 
-With 4 simple steps you should be able to use hostnames instead of ports:
+With 5 simple steps you should be able to use hostnames instead of ports:
 
 1. Add the start snippet to your project start command to make sure the proxy is running for your project
 2. Add the Traefik rules to your docker compose file
 3. Link your docker network to the `enrise-dev-proxy` network
 4. Add the hostname to your `/etc/hosts` file 
+5. (optional) Add SSL certificates
 
 ## 1. Start proxy snippet
 

@@ -95,3 +95,45 @@ You could automate this with a script like the following:
 ```
 This script checks if my-project.local already exists in the hosts file, and if not, it adds the contents
 of a file named dev/hostnames.txt (Add this file to your project).
+
+## 5. SSL
+
+Requirements: [mkcert](https://github.com/FiloSottile/mkcert#installation) (don't forget to run `mkcert -install` after installation!)
+
+Steps to add SSL to your dev hosts:
+
+**Step 1. Add labels in docker compose**
+
+Add the `tls`, and `entrypoints` label to your router:
+
+```yaml
+services:
+  frontend:
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.my-project-frontend.rule=Host(`frontend.my-project.local`)"
+      - "traefik.http.services.my-project-frontend.loadbalancer.server.port=80"
+      - "traefik.http.routers.my-project-frontend.tls=true"
+      - "traefik.http.routers.my-project-frontend.entrypoints=web-secure"
+```
+
+**Step 2. Create certificates and copy them to the dev proxy**
+
+To create certificates use `mkcert`.
+
+For example: `mkcert frontend.my-project.local backend.my-project.local`
+
+Copy the generated files to the dev proxy certificates folder: `cp ./frontend.my-project.local+1* ~/.enrise-dev-proxy/certs/`
+
+**Step 3. Create a tls configuration for your project**
+
+Create a configuration file `my-project.yml`
+
+```yaml
+tls:
+  certificates:
+    - certFile: /var/certs/frontend.my-project.local+1.pem
+      keyFile: /var/certs/frontend.my-project.local+1-key.pem
+```
+
+Copy the configuration to the dev proxy configuration folder: `cp ./my-project.yml ~/.enrise-dev-proxy/certs/my-project.yml`

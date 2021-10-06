@@ -138,3 +138,18 @@ tls:
 ```
 
 Copy the configuration to the dev proxy configuration folder: `cp ./my-project.yml ~/.enrise-dev-proxy/certs/my-project.yml`
+
+**Automate step 2 & 3**
+
+```sh
+echo "\n=== Creating certificates ===\n"
+(mkdir -p ./dev/traefik-config/certs || true \
+	&& cd ./dev/traefik-config/certs \
+	&& (mkcert frontend.my-project.local backend.my-project.local \
+	&& echo "> certificates created") \
+	|| echo "> could not create certificates, did you install mkcert?")
+echo "\n=== Copy dev proxy config ===\n"
+cp ./dev/traefik-config/my-project.yml ~/.enrise-dev-proxy/config/my-project.yml
+cp ./dev/traefik-config/certs/* ~/.enrise-dev-proxy/certs/
+echo "> configuration copied"
+```

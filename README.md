@@ -4,8 +4,9 @@
 
 ## Why?
 
-Are you running multiple docker containers/projects? Then it's very likely that you struggle with the port numbers
-that needs to be assigned to every container. This projects gives you an easy way to add local domain names to
+Are you running multiple docker containers/projects? Then it's very likely
+that you struggle with the port numbers that needs to be assigned to every
+container. This project gives you an easy way to add local domain names to
 your docker containers.
 
 - http://localhost:3000 :arrow_right: http://dashboard.local
@@ -23,7 +24,14 @@ With 5 simple steps you should be able to use hostnames instead of ports:
 4. Add your local url to your `/etc/hosts` file 
 5. (optional) Add SSL certificates for https
 
-Ready? [Setup the development proxy](./setup.md) for your project(s).
+Ready? [Set up the development proxy](./setup.md) for your project(s).
+
+## Running
+
+Once you have the development proxy running:
+
+- Catch localhost traffic on port 80/443, and reroute your local domains
+- The Traefik dashboard is available at http://localhost:10081
 
 ## Documentation
 

@@ -2,7 +2,7 @@
 
 Requirements: [mkcert](https://github.com/FiloSottile/mkcert#installation) (don't forget to run `mkcert -install` after installation!)
 
-Steps to add SSL to your dev hosts:
+Before you start, you must have [the development proxy](./setup.md) running.
 
 ## 1. Add labels in docker compose
 

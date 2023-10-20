@@ -7,7 +7,7 @@ We recommend that you add the snippet below to your project starting command, to
 you have the proxy running when you run a project. Run it via curl:
 
 ```shell
-curl --silent https://enri.se/development-proxy-start | sh
+curl --silent --location https://enri.se/development-proxy-start | sh
 ```
 or via wget:
 ```shell

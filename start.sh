@@ -1,26 +1,31 @@
 #!/usr/bin/env sh
 
-if ($(docker ps | grep -q enrise-dev-proxy)); then
+# ================================================
+# Enrise development proxy
+# find out more: https://enri.se/development-proxy
+# ================================================
+
+if ($(docker ps | grep -q development-proxy)); then
   echo "Development hosts proxy is already running."
   exit 0
 fi
 
-mkdir -p ~/.enrise-dev-proxy/config || true
-mkdir -p ~/.enrise-dev-proxy/certs || true
+mkdir -p ~/.development-proxy/config || true
+mkdir -p ~/.development-proxy/certs || true
 
-echo -n "Starting development hosts proxy... "
-docker network create enrise-dev-proxy > /dev/null 2>&1 || true
+echo "Starting development hosts proxy..."
+docker network create development-proxy > /dev/null 2>&1 || true
 (docker run \
-    -d \
+    --detach \
     --rm \
-    -p 80:80 \
-    -p 443:443 \
-    -p 10081:10081 \
-    -v /var/run/docker.sock:/var/run/docker.sock:ro \
-    -v ~/.enrise-dev-proxy/config:/var/config:ro \
-    -v ~/.enrise-dev-proxy/certs:/var/certs:ro \
-    --name enrise-dev-proxy \
-    --network enrise-dev-proxy \
+    --publish 80:80 \
+    --publish 443:443 \
+    --publish 10081:10081 \
+    --volume /var/run/docker.sock:/var/run/docker.sock:ro \
+    --volume ~/.development-proxy/config:/var/config:ro \
+    --volume ~/.development-proxy/certs:/var/certs:ro \
+    --name development-proxy \
+    --network development-proxy \
     traefik:v2.2 \
     --api.insecure=true \
     --providers.docker=true \

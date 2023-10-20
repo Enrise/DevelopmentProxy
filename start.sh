@@ -6,14 +6,14 @@
 # ================================================
 
 if ($(docker ps | grep -q development-proxy)); then
-  echo "Development hosts proxy is already running."
-  exit 0
+    echo "Development hosts proxy is already running."
+    exit 0
 fi
 
 mkdir -p ~/.development-proxy/config || true
 mkdir -p ~/.development-proxy/certs || true
 
-echo "Starting development hosts proxy..."
+echo "Starting development proxy..."
 docker network create development-proxy > /dev/null 2>&1 || true
 (docker run \
     --detach \
@@ -26,7 +26,7 @@ docker network create development-proxy > /dev/null 2>&1 || true
     --volume ~/.development-proxy/certs:/var/certs:ro \
     --name development-proxy \
     --network development-proxy \
-    traefik:v2.2 \
+    traefik:v2.10 \
     --api.insecure=true \
     --providers.docker=true \
     --providers.docker.exposedbydefault=false \
@@ -34,4 +34,4 @@ docker network create development-proxy > /dev/null 2>&1 || true
     --providers.file.watch=true \
     --entrypoints.web.address=:80 \
     --entrypoints.web-secure.address=:443 \
-    --entrypoints.traefik.address=:10081 > /dev/null && echo "started")
+    --entrypoints.traefik.address=:10081 > /dev/null && echo "Started.")

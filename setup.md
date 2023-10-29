@@ -1,6 +1,5 @@
 # Set up the Development Proxy
 
-
 ## 1. Start proxy snippet
 
 We recommend that you add the snippet below to your project starting command, to make sure
@@ -63,7 +62,6 @@ we would expect the following content in `/etc/hosts`:
 #==== My Example Project
 127.0.0.1    my-project.local
 127.0.0.1    api.my-project.local
-127.0.0.1    frontend.my-project.local
 #====
 ```
 
@@ -71,17 +69,46 @@ You can now visit your container via your custom local domain!
 
 ### automate setting the hostnames
 
+Add the following [./Taskfile](https://github.com/Enrise/Taskfile) task in order to make sure the hosts are set correctly:
+
 ```shell
-cat /etc/hosts | grep -q my-project.local \
-|| (echo "\n=== Adding local My Project hosts ===\n" && \
-    docker run --rm \
-    -v /etc/hosts:/etc/hosts \
-    -v $$(pwd)/dev/hostnames.txt:/dev/hostnames.txt \
-    alpine:latest \
-    sh -c 'cat /dev/hostnames.txt >> /etc/hosts')
+function project:set-hosts {
+    title "Setup hosts file"
+    for localHostName in "my-project.local" "api.my-project.local"; do
+        if ! cat /etc/hosts | grep --silent $localHostName; then
+            echo "Missing $localHostName in /etc/hosts, please make sure it contains:"
+            echo ""
+            echo "#==== My Example Project"
+            echo "127.0.0.1    my-project.local"
+            echo "127.0.0.1    api.my-project.local"
+            echo "#===="
+            exit 422
+        fi
+    done
+    echo "All hosts present."
+}
 ```
-This script checks if my-project.local already exists in the hosts file, and if not, it adds the contents
-of a file named dev/hostnames.txt (Add this file to your project).
+
+Or, automatically update the hosts file via a docker container using root permissions:
+
+```shell
+function project:set-hosts {
+    title "Setup hosts file"
+    for localHostName in "my-project.local" "api.my-project.local"; do
+        if ! cat /etc/hosts | grep --silent $localHostName; then
+            docker run --rm \
+                --volume /etc/hosts:/etc/hosts \
+                --volume ./hostnames.txt:/dev/hostnames.txt \
+                alpine:latest \
+                sh -c 'cat /dev/hostnames.txt >> /etc/hosts'
+            break
+        fi
+    done
+    echo "All hosts present."
+}
+```
+
+For the script above, make sure a `hostnames.txt` is resolved correctly, put in the desired `/etc/hosts` section there.
 
 ## 5. (optional) Add SSL certificates for https
 

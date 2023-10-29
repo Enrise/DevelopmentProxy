@@ -67,11 +67,19 @@ we would expect the following content in `/etc/hosts`:
 
 You can now visit your container via your custom local domain!
 
-### automate setting the hostnames
+## 5. (optional) Add SSL certificates for https
 
-Add the following [./Taskfile](https://github.com/Enrise/Taskfile) task in order to make sure the hosts are set correctly:
+To use https, please read the [setup https documentation](./setup-https.md).
+
+# Automation
+
+We recommend that you automate the steps descriped above. With a [./Taskfile](https://github.com/Enrise/Taskfile) you can easily add bash/shell commands. A full example:
 
 ```shell
+# =========================================================
+## Project
+# =========================================================
+
 function project:set-hosts {
     title "Setup hosts file"
     for localHostName in "my-project.local" "api.my-project.local"; do
@@ -87,9 +95,41 @@ function project:set-hosts {
     done
     echo "All hosts present."
 }
+
+# =========================================================
+## Docker
+# =========================================================
+
+function task:build { ## (re)Build the project docker containers
+    title "Building project container"
+    docker compose build
+}
+
+function task:start { ## Run the project locally
+    project:set-hosts
+    title "Starting development proxy"
+    curl --silent --location https://enri.se/development-proxy-start | sh
+    title "Starting project container"
+    docker compose up --detach
+    docker network connect <your-project-docker-network> development-proxy || true
+    title "Project running"
+    echo "- Site:  http://my-project.local"
+    echo "- API:   http://api.my-project.local"
+}
+
+function task:stop { ## Stop the local project
+    title "Stopping project container"
+    docker network disconnect <your-project-docker-network> development-proxy || true
+    docker compose stop
+}
+
+function task:restart { ## Restart the local project
+    task:stop
+    task:start
+}
 ```
 
-Or, automatically update the hosts file via a docker container using root permissions:
+Or, automatically update the hosts file via a docker container using root permissions, replace the `project:set-hosts` task:
 
 ```shell
 function project:set-hosts {
@@ -109,7 +149,3 @@ function project:set-hosts {
 ```
 
 For the script above, make sure a `hostnames.txt` is resolved correctly, put in the desired `/etc/hosts` section there.
-
-## 5. (optional) Add SSL certificates for https
-
-To use https, please read the [setup https documentation](./setup-https.md).

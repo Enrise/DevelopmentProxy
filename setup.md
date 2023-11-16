@@ -27,8 +27,8 @@ services:
   backend:
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.my-project-frontend.rule=Host(`api.my-project.local`)"
-      - "traefik.http.services.my-project-frontend.loadbalancer.server.port=80"
+      - "traefik.http.routers.my-project-backend.rule=Host(`api.my-project.local`)"
+      - "traefik.http.services.my-project-backend.loadbalancer.server.port=80"
 ```
 
 Note: make sure the slugs begin with your project name so multiple projects can run together.

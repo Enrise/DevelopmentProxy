@@ -23,6 +23,7 @@ With 5 simple steps you should be able to use hostnames instead of ports:
 3. Link your docker network to the `development-proxy` network
 4. Add your local url to your `/etc/hosts` file 
 5. (optional) Add SSL certificates for https
+    * Not optional if you want to use Postgres with Traefik
 
 Ready? [Set up the development proxy](./setup.md) for your project(s).
 

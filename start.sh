@@ -21,12 +21,13 @@ docker network create development-proxy > /dev/null 2>&1 || true
     --publish 80:80 \
     --publish 443:443 \
     --publish 10081:10081 \
+    --publish 5432:5432 \
     --volume /var/run/docker.sock:/var/run/docker.sock:ro \
     --volume ~/.development-proxy/config:/var/config:ro \
     --volume ~/.development-proxy/certs:/var/certs:ro \
     --name development-proxy \
     --network development-proxy \
-    traefik:v2.10 \
+    traefik:v3.0 \
     --api.insecure=true \
     --providers.docker=true \
     --providers.docker.exposedbydefault=false \
@@ -34,4 +35,5 @@ docker network create development-proxy > /dev/null 2>&1 || true
     --providers.file.watch=true \
     --entrypoints.web.address=:80 \
     --entrypoints.web-secure.address=:443 \
-    --entrypoints.traefik.address=:10081 > /dev/null && echo "Started.")
+    --entrypoints.traefik.address=:10081 \
+    --entrypoints.pg-tcp.address=:5432 > /dev/null && echo "Started.")

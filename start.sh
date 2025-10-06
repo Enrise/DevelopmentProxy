@@ -26,7 +26,7 @@ docker network create development-proxy > /dev/null 2>&1 || true
     --volume ~/.development-proxy/certs:/var/certs:ro \
     --name development-proxy \
     --network development-proxy \
-    traefik:v2.10 \
+    traefik:v2.11 \
     --api.insecure=true \
     --providers.docker=true \
     --providers.docker.exposedbydefault=false \
